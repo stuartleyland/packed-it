@@ -52,20 +52,6 @@ public class PackingListRepositoryTest {
     }
 
     @Test
-    public void updatingAListUpdatesTheVersionNumber() {
-        final PackingList list = new PackingList();
-        list.setDescription(LIST_DESCRIPTION);
-
-        final PackingList savedList = packingListRepository.saveAndFlush(list);
-        final PackingList retrievedList = packingListRepository.findOne(savedList.getId());
-
-        retrievedList.setStartDate(new Date());
-        final PackingList updatedList = packingListRepository.saveAndFlush(retrievedList);
-
-        assertThat("Version number should have increased", updatedList.getVersion(), greaterThan(retrievedList.getVersion()));
-    }
-
-    @Test
     public void listIsNotEqualAfterUpdate() {
         final PackingList list = new PackingList();
         list.setDescription(LIST_DESCRIPTION);
@@ -77,7 +63,7 @@ public class PackingListRepositoryTest {
         final PackingList updatedList = packingListRepository.saveAndFlush(retrievedList);
 
         assertThat("Lists should not be equal after update due to increased version number", updatedList, not(equalTo(retrievedList)));
-        assertThat("ID should be the same", updatedList.getId(), equalTo(savedList.getId()));
+        assertThat("ID should be the same", updatedList.getId(), equalTo(retrievedList.getId()));
         assertThat("Version number should have increased", updatedList.getVersion(), greaterThan(retrievedList.getVersion()));
     }
 }
