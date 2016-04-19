@@ -10,3 +10,6 @@ buildNumber.properties
 .settings/
 .classpath
 .project
+
+# Ignore the data folder which contains the H2 database
+data/
