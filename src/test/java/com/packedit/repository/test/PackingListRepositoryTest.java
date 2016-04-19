@@ -7,10 +7,13 @@ import static org.junit.Assert.assertThat;
 
 import java.util.Date;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.packedit.Application;
@@ -25,6 +28,17 @@ public class PackingListRepositoryTest {
 
     @Autowired
     private PackingListRepository packingListRepository;
+
+    @Rule
+    public ExpectedException exception = ExpectedException.none();
+
+    @Test
+    public void exceptionIsThrownIfDescriptionIsNotSet() {
+        exception.expect(DataIntegrityViolationException.class);
+
+        final PackingList list = new PackingList();
+        packingListRepository.saveAndFlush(list);
+    }
 
     @Test
     public void newListCanBeCreatedAndRetrieved() {
