@@ -1,7 +1,11 @@
 package com.packedit.repository.test;
 
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertThat;
+
+import java.util.Date;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,17 +21,49 @@ import com.packedit.repository.PackingListRepository;
 @SpringApplicationConfiguration(Application.class)
 public class PackingListRepositoryTest {
 
+    private static final String LIST_DESCRIPTION = "Test List";
+
     @Autowired
     private PackingListRepository packingListRepository;
 
     @Test
     public void newListCanBeCreatedAndRetrieved() {
         final PackingList list = new PackingList();
-        list.setDescription("Valencia");
+        list.setDescription(LIST_DESCRIPTION);
 
         final PackingList savedList = packingListRepository.saveAndFlush(list);
         final PackingList retrievedList = packingListRepository.findOne(savedList.getId());
 
         assertThat("Retrieved list should be the same as the saved list", retrievedList, equalTo(savedList));
+    }
+
+    @Test
+    public void updatingAListUpdatesTheVersionNumber() {
+        final PackingList list = new PackingList();
+        list.setDescription(LIST_DESCRIPTION);
+
+        final PackingList savedList = packingListRepository.saveAndFlush(list);
+        final PackingList retrievedList = packingListRepository.findOne(savedList.getId());
+
+        retrievedList.setStartDate(new Date());
+        final PackingList updatedList = packingListRepository.saveAndFlush(retrievedList);
+
+        assertThat("Version number should have increased", updatedList.getVersion(), greaterThan(retrievedList.getVersion()));
+    }
+
+    @Test
+    public void listIsNotEqualAfterUpdate() {
+        final PackingList list = new PackingList();
+        list.setDescription(LIST_DESCRIPTION);
+
+        final PackingList savedList = packingListRepository.saveAndFlush(list);
+        final PackingList retrievedList = packingListRepository.findOne(savedList.getId());
+
+        retrievedList.setStartDate(new Date());
+        final PackingList updatedList = packingListRepository.saveAndFlush(retrievedList);
+
+        assertThat("Lists should not be equal after update due to increased version number", updatedList, not(equalTo(retrievedList)));
+        assertThat("ID should be the same", updatedList.getId(), equalTo(savedList.getId()));
+        assertThat("Version number should have increased", updatedList.getVersion(), greaterThan(retrievedList.getVersion()));
     }
 }

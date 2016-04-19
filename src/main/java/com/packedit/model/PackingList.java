@@ -31,7 +31,7 @@ public class PackingList {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = (prime * result) + ((description == null) ? 0 : description.hashCode());
+        result = (prime * result) + ((id == null) ? 0 : id.hashCode());
         result = (prime * result) + version;
         return result;
     }
@@ -48,11 +48,11 @@ public class PackingList {
             return false;
         }
         final PackingList other = (PackingList)obj;
-        if (description == null) {
-            if (other.description != null) {
+        if (id == null) {
+            if (other.id != null) {
                 return false;
             }
-        } else if (!description.equals(other.description)) {
+        } else if (!id.equals(other.id)) {
             return false;
         }
         if (version != other.version) {
@@ -87,6 +87,14 @@ public class PackingList {
 
     public void setEndDate(final Date endDate) {
         this.endDate = endDate;
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(final int version) {
+        this.version = version;
     }
 
     public List<ListItem> getItems() {
