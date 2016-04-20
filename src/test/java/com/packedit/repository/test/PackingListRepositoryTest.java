@@ -2,18 +2,21 @@ package com.packedit.repository.test;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertThat;
 
 import java.util.Date;
+import java.util.Set;
 
-import org.junit.Rule;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.packedit.Application;
@@ -29,15 +32,42 @@ public class PackingListRepositoryTest {
     @Autowired
     private PackingListRepository packingListRepository;
 
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
-
     @Test
     public void exceptionIsThrownIfDescriptionIsNotSet() {
-        exception.expect(DataIntegrityViolationException.class);
-
         final PackingList list = new PackingList();
-        packingListRepository.saveAndFlush(list);
+
+        try {
+            packingListRepository.saveAndFlush(list);
+        } catch (final Exception exception) {
+            assertThat("Exception should be of type ConstraintViolationException", exception, instanceOf(ConstraintViolationException.class));
+
+            final ConstraintViolationException violationException = (ConstraintViolationException)exception;
+            final Set<ConstraintViolation<?>> violations = violationException.getConstraintViolations();
+
+            assertThat("Only one constraint violation should have occurred", violations.size(), equalTo(1));
+
+            final ConstraintViolation<?> violation = violations.stream().findFirst().get();
+            assertThat("Description is mandatory", violation.getMessage(), equalTo("Description is required"));
+        }
+    }
+
+    @Test
+    public void exceptionIsThrownIfDescriptionIsTooLong() {
+        final PackingList list = new PackingList();
+        list.setDescription(StringUtils.repeat("a", 201));
+        try {
+            packingListRepository.saveAndFlush(list);
+        } catch (final Exception exception) {
+            assertThat("Exception should be of type ConstraintViolationException", exception, instanceOf(ConstraintViolationException.class));
+
+            final ConstraintViolationException violationException = (ConstraintViolationException)exception;
+            final Set<ConstraintViolation<?>> violations = violationException.getConstraintViolations();
+
+            assertThat("Only one constraint violation should have occurred", violations.size(), equalTo(1));
+
+            final ConstraintViolation<?> violation = violations.stream().findFirst().get();
+            assertThat("Description is mandatory", violation.getMessage(), equalTo("Description cannot be more than 200 characters"));
+        }
     }
 
     @Test
