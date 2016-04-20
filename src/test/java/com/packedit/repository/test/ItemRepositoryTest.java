@@ -41,6 +41,15 @@ public class ItemRepositoryTest {
     }
 
     @Test
+    public void exceptionIsThrownIfCategoryIsNotSet() {
+        final Item item = new Item();
+        item.setDescription(TestUtils.ITEM_DESCRIPTION);
+
+        exception.expect(DataIntegrityViolationException.class);
+        itemRepository.saveAndFlush(item);
+    }
+
+    @Test
     public void newItemCanBeCreatedAndRetrieved() {
         final Item item = testUtils.createMinimalItemUnsaved();
         final Item savedItem = itemRepository.saveAndFlush(item);
