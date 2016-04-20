@@ -1,18 +1,15 @@
 package com.packedit.model;
 
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 @Entity
 public class ListItem extends BaseEntity {
 
     @ManyToOne
-    @JoinColumn(name = "ListId")
     private PackingList list;
 
     @ManyToOne
-    @JoinColumn(name = "ItemId")
     private Item item;
 
     public PackingList getList() {
