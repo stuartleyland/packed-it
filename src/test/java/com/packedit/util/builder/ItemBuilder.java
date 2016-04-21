@@ -8,13 +8,12 @@ public class ItemBuilder {
     private String description = "An Item";
     private ItemCategory category = new ItemCategoryBuilder().build();
 
-    public ItemBuilder withDescription(final String description) {
-        this.description = description;
-        return this;
+    public ItemBuilder(final ItemCategory category) {
+        this.category = category;
     }
 
-    public ItemBuilder withCategory(final ItemCategory category) {
-        this.category = category;
+    public ItemBuilder withDescription(final String description) {
+        this.description = description;
         return this;
     }
 

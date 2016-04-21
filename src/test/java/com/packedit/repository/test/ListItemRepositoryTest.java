@@ -20,13 +20,13 @@ import com.packedit.model.Item;
 import com.packedit.model.ItemCategory;
 import com.packedit.model.ListItem;
 import com.packedit.model.PackingList;
-import com.packedit.repository.ItemCategoryRepository;
-import com.packedit.repository.ItemRepository;
 import com.packedit.repository.ListItemRepository;
 import com.packedit.service.ListManager;
 import com.packedit.util.TestUtils;
+import com.packedit.util.builder.ItemBuilder;
 import com.packedit.util.builder.ItemCategoryBuilder;
 import com.packedit.util.builder.ItemsBuilder;
+import com.packedit.util.builder.ListItemBuilder;
 import com.packedit.util.builder.PackingListBuilder;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -41,12 +41,6 @@ public class ListItemRepositoryTest {
 
     @Autowired
     private ListManager listManager;
-
-    @Autowired
-    private ItemRepository itemRepository;
-
-    @Autowired
-    private ItemCategoryRepository itemCategoryRepository;
 
     @Rule
     public ExpectedException exception = ExpectedException.none();
@@ -71,7 +65,16 @@ public class ListItemRepositoryTest {
 
     @Test
     public void listItemCanBeCreatedAndRetrieved() {
-        final ListItem listItem = testUtils.createMinimalListItemUnsaved();
+        PackingList list = new PackingListBuilder().build();
+        list = testUtils.saveList(list);
+
+        ItemCategory category = new ItemCategoryBuilder().build();
+        category = testUtils.saveCategory(category);
+
+        Item item = new ItemBuilder(category).build();
+        item = testUtils.saveItem(item);
+
+        final ListItem listItem = new ListItemBuilder(list, item).build();
         final ListItem savedListItem = listItemRepository.saveAndFlush(listItem);
         final ListItem retrievedListItem = listItemRepository.findOne(savedListItem.getId());
 
@@ -81,10 +84,10 @@ public class ListItemRepositoryTest {
     @Test
     public void listItemsCanBeRetrievedForAList() {
         ItemCategory category = new ItemCategoryBuilder().build();
-        category = itemCategoryRepository.save(category);
+        category = testUtils.saveCategory(category);
 
         List<Item> items = new ItemsBuilder().withXItemsInCategory(2, category).build();
-        items = itemRepository.save(items);
+        items = testUtils.saveItems(items);
 
         PackingList createdList = new PackingListBuilder().withItems(items).build();
         createdList = listManager.createOrUpdateList(createdList);

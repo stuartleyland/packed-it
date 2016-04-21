@@ -7,15 +7,11 @@ import com.packedit.model.PackingList;
 public class ListItemBuilder {
 
     private final PackingList list;
-    private Item item = new ItemBuilder().build();
+    private final Item item;
 
-    public ListItemBuilder(final PackingList list) {
+    public ListItemBuilder(final PackingList list, final Item item) {
         this.list = list;
-    }
-
-    public ListItemBuilder forItem(final Item item) {
         this.item = item;
-        return this;
     }
 
     public ListItem build() {

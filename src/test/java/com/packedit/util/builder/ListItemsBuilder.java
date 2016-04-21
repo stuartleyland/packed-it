@@ -16,23 +16,8 @@ public class ListItemsBuilder {
         this.list = list;
     }
 
-    public ListItemsBuilder withXItems(final int numberOfItems) {
-        for (int i = 0; i < numberOfItems; i++) {
-            listItems.add(new ListItemBuilder(list).build());
-        }
-        return this;
-    }
-
-    public ListItemsBuilder withItemNames(final List<String> itemNames) {
-        for (final String itemName : itemNames) {
-            final Item item = new ItemBuilder().withDescription(itemName).build();
-            listItems.add(new ListItemBuilder(list).forItem(item).build());
-        }
-        return this;
-    }
-
     public ListItemsBuilder withItems(final List<Item> items) {
-        items.forEach(item -> listItems.add(new ListItemBuilder(list).forItem(item).build()));
+        items.forEach(item -> listItems.add(new ListItemBuilder(list, item).build()));
         return this;
     }
 

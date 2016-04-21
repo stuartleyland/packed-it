@@ -1,5 +1,7 @@
 package com.packedit.util;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -75,10 +77,6 @@ public class TestUtils {
         return createMinimalListItem(false);
     }
 
-    public ListItem createMinimalListItemSaved() {
-        return createMinimalListItem(true);
-    }
-
     private ListItem createMinimalListItem(final boolean save) {
         ListItem listItem = new ListItem();
         listItem.setList(createMinimalListSaved());
@@ -89,5 +87,21 @@ public class TestUtils {
         }
 
         return listItem;
+    }
+
+    public ItemCategory saveCategory(final ItemCategory category) {
+        return categoryRepository.save(category);
+    }
+
+    public Item saveItem(final Item item) {
+        return itemRepository.save(item);
+    }
+
+    public List<Item> saveItems(final List<Item> items) {
+        return itemRepository.save(items);
+    }
+
+    public PackingList saveList(final PackingList list) {
+        return listRepository.save(list);
     }
 }

@@ -12,7 +12,7 @@ public class ItemsBuilder {
 
     public ItemsBuilder withXItemsInCategory(final int numberOfItems, final ItemCategory category) {
         for (int i = 0; i < numberOfItems; i++) {
-            items.add(new ItemBuilder().withCategory(category).build());
+            items.add(new ItemBuilder(category).build());
         }
 
         return this;

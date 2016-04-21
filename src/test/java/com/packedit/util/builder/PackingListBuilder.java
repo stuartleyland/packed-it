@@ -31,16 +31,6 @@ public class PackingListBuilder {
         return this;
     }
 
-    public PackingListBuilder withXItems(final int numberOfItems) {
-        this.items = new ListItemsBuilder(list).withXItems(numberOfItems).build();
-        return this;
-    }
-
-    public PackingListBuilder withItemNames(final List<String> itemNames) {
-        this.items = new ListItemsBuilder(list).withItemNames(itemNames).build();
-        return this;
-    }
-
     public PackingListBuilder withItems(final List<Item> items) {
         this.items = new ListItemsBuilder(list).withItems(items).build();
         return this;

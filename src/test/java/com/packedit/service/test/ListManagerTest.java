@@ -21,8 +21,6 @@ import com.packedit.model.Item;
 import com.packedit.model.ItemCategory;
 import com.packedit.model.ListItem;
 import com.packedit.model.PackingList;
-import com.packedit.repository.ItemCategoryRepository;
-import com.packedit.repository.ItemRepository;
 import com.packedit.service.ListManager;
 import com.packedit.util.TestUtils;
 import com.packedit.util.builder.ItemCategoryBuilder;
@@ -56,12 +54,6 @@ public class ListManagerTest {
 
     @Autowired
     private ListManager listManager;
-
-    @Autowired
-    private ItemRepository itemRepository;
-
-    @Autowired
-    private ItemCategoryRepository itemCategoryRepository;
 
     @Test
     public void listIsCreatedWithNullStartAndEndDates() {
@@ -134,13 +126,13 @@ public class ListManagerTest {
     @Test
     public void fullyLoadedListIsReturned() {
         ItemCategory category = new ItemCategoryBuilder().build();
-        category = itemCategoryRepository.save(category);
+        category = testUtils.saveCategory(category);
 
         List<Item> items = new ItemsBuilder().withXItemsInCategory(2, category).build();
-        items = itemRepository.save(items);
+        items = testUtils.saveItems(items);
 
         PackingList createdList = new PackingListBuilder().withItems(items).build();
-        createdList = listManager.createOrUpdateList(createdList);
+        createdList = testUtils.saveList(createdList);
 
         final PackingList retrievedList = listManager.retrieveFullyLoadedList(createdList);
         assertThat("The list items should be linked to the items", retrievedList.getItems(), listItemsAreLinkedToItems(items));
@@ -163,13 +155,13 @@ public class ListManagerTest {
     @Test
     public void listItemsCanBeRetrievedForAList() {
         ItemCategory category = new ItemCategoryBuilder().build();
-        category = itemCategoryRepository.save(category);
+        category = testUtils.saveCategory(category);
 
         List<Item> items = new ItemsBuilder().withXItemsInCategory(2, category).build();
-        items = itemRepository.save(items);
+        items = testUtils.saveItems(items);
 
         PackingList createdList = new PackingListBuilder().withItems(items).build();
-        createdList = listManager.createOrUpdateList(createdList);
+        createdList = testUtils.saveList(createdList);
 
         final List<ListItem> listItems = listManager.getListItems(createdList);
         assertThat("List items should match the items the list was created with", listItems, listItemsAreLinkedToItems(items));
