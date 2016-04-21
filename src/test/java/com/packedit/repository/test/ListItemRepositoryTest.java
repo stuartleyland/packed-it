@@ -1,7 +1,10 @@
 package com.packedit.repository.test;
 
+import static com.packedit.util.matcher.ListItemMatcher.listItemsAreLinkedToItems;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
+
+import java.util.List;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -13,7 +16,9 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.packedit.Application;
+import com.packedit.model.Item;
 import com.packedit.model.ListItem;
+import com.packedit.model.PackingList;
 import com.packedit.repository.ListItemRepository;
 import com.packedit.util.TestUtils;
 
@@ -55,5 +60,15 @@ public class ListItemRepositoryTest {
         final ListItem retrievedListItem = listItemRepository.findOne(savedListItem.getId());
 
         assertThat("Saved and retrieved list items should be the same", retrievedListItem, equalTo(savedListItem));
+    }
+
+    @Test
+    public void listItemsCanBeRetrievedForAList() {
+        final Item item1 = testUtils.createMinimalItemSaved();
+        final Item item2 = testUtils.createMinimalItemSaved();
+        final PackingList createdList = testUtils.createListWithItems(item1, item2);
+
+        final List<ListItem> listItems = listItemRepository.findByList(createdList);
+        assertThat("List items should match the items the list was created with", listItems, listItemsAreLinkedToItems(item1, item2));
     }
 }

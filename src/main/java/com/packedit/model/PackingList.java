@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -20,7 +19,7 @@ public class PackingList extends BaseEntity {
     private Date startDate;
     private Date endDate;
 
-    @OneToMany(mappedBy = "list", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "list")
     private List<ListItem> items = new ArrayList<>();
 
     public void addListItem(final ListItem listItem) {
