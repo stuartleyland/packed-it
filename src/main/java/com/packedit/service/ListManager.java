@@ -14,6 +14,7 @@ import com.packedit.repository.ListItemRepository;
 import com.packedit.repository.PackingListRepository;
 
 @Service
+@Transactional
 public class ListManager {
 
     @Autowired
@@ -22,21 +23,25 @@ public class ListManager {
     @Autowired
     private ListItemRepository listItemRepository;
 
-    @Transactional
+    public PackingList createOrUpdateList(final PackingList list) {
+        return listRepository.save(list);
+    }
+
+    public PackingList retrieveFullyLoadedList(final PackingList list) {
+        return listRepository.findByIdAndLoadFully(list.getId());
+    }
+
     public PackingList addItemsToList(final PackingList list, final Item... items) {
         for (final Item item : items) {
             final ListItem listItem = new ListItem();
             listItem.setList(list);
             listItem.setItem(item);
-            listItemRepository.save(listItem);
-
             list.addListItem(listItem);
         }
 
         return listRepository.save(list);
     }
 
-    @Transactional
     public List<ListItem> getListItems(final PackingList list) {
         return listItemRepository.findByList(list);
     }

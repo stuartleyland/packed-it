@@ -17,10 +17,17 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.packedit.Application;
 import com.packedit.model.Item;
+import com.packedit.model.ItemCategory;
 import com.packedit.model.ListItem;
 import com.packedit.model.PackingList;
+import com.packedit.repository.ItemCategoryRepository;
+import com.packedit.repository.ItemRepository;
 import com.packedit.repository.ListItemRepository;
+import com.packedit.service.ListManager;
 import com.packedit.util.TestUtils;
+import com.packedit.util.builder.ItemCategoryBuilder;
+import com.packedit.util.builder.ItemsBuilder;
+import com.packedit.util.builder.PackingListBuilder;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(Application.class)
@@ -31,6 +38,15 @@ public class ListItemRepositoryTest {
 
     @Autowired
     private TestUtils testUtils;
+
+    @Autowired
+    private ListManager listManager;
+
+    @Autowired
+    private ItemRepository itemRepository;
+
+    @Autowired
+    private ItemCategoryRepository itemCategoryRepository;
 
     @Rule
     public ExpectedException exception = ExpectedException.none();
@@ -64,11 +80,16 @@ public class ListItemRepositoryTest {
 
     @Test
     public void listItemsCanBeRetrievedForAList() {
-        final Item item1 = testUtils.createMinimalItemSaved();
-        final Item item2 = testUtils.createMinimalItemSaved();
-        final PackingList createdList = testUtils.createListWithItems(item1, item2);
+        ItemCategory category = new ItemCategoryBuilder().build();
+        category = itemCategoryRepository.save(category);
+
+        List<Item> items = new ItemsBuilder().withXItemsInCategory(2, category).build();
+        items = itemRepository.save(items);
+
+        PackingList createdList = new PackingListBuilder().withItems(items).build();
+        createdList = listManager.createOrUpdateList(createdList);
 
         final List<ListItem> listItems = listItemRepository.findByList(createdList);
-        assertThat("List items should match the items the list was created with", listItems, listItemsAreLinkedToItems(item1, item2));
+        assertThat("List items should match the items the list was created with", listItems, listItemsAreLinkedToItems(items));
     }
 }

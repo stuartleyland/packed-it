@@ -1,7 +1,6 @@
 package com.packedit.util.matcher;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.hamcrest.Description;
@@ -49,7 +48,7 @@ public class ListItemMatcher extends TypeSafeMatcher<List<ListItem>> {
         return (unmatchedItems.size() == 0) && (matchedItems.size() == items.size());
     }
 
-    public static ListItemMatcher listItemsAreLinkedToItems(final Item... items) {
-        return new ListItemMatcher(Arrays.asList(items));
+    public static ListItemMatcher listItemsAreLinkedToItems(final List<Item> items) {
+        return new ListItemMatcher(items);
     }
 }

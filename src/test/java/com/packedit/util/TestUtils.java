@@ -11,7 +11,6 @@ import com.packedit.repository.ItemCategoryRepository;
 import com.packedit.repository.ItemRepository;
 import com.packedit.repository.ListItemRepository;
 import com.packedit.repository.PackingListRepository;
-import com.packedit.service.ListManager;
 
 @Service
 public class TestUtils {
@@ -31,9 +30,6 @@ public class TestUtils {
 
     @Autowired
     private ListItemRepository listItemRepository;
-
-    @Autowired
-    private ListManager listManager;
 
     public PackingList createMinimalListUnsaved() {
         return createMinimalList(false);
@@ -93,9 +89,5 @@ public class TestUtils {
         }
 
         return listItem;
-    }
-
-    public PackingList createListWithItems(final Item... items) {
-        return listManager.addItemsToList(createMinimalListSaved(), items);
     }
 }

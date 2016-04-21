@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
@@ -19,7 +20,7 @@ public class PackingList extends BaseEntity {
     private Date startDate;
     private Date endDate;
 
-    @OneToMany(mappedBy = "list")
+    @OneToMany(mappedBy = "list", cascade = CascadeType.ALL)
     private List<ListItem> items = new ArrayList<>();
 
     public void addListItem(final ListItem listItem) {
