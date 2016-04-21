@@ -1,5 +1,6 @@
 package com.packedit.service.test;
 
+import static com.packedit.util.matcher.ListItemMatcher.listItemsAreLinkedToItems;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
 
@@ -33,7 +34,8 @@ public class ListManagerTest {
         final Item item3 = testUtils.createMinimalItemSaved();
 
         final PackingList updatedList = listManager.addItemsToList(list, item1, item2, item3);
-        //assertThat("The list should have three items", updatedList.getItems(), containsInAnyOrder(item1, item2, item3));
+
         assertThat("The list should have three items", updatedList.getItems().size(), equalTo(3));
+        assertThat("List items should be linked to the items", updatedList.getItems(), listItemsAreLinkedToItems(item1, item2, item3));
     }
 }
