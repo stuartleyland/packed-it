@@ -15,10 +15,6 @@ import com.packedit.repository.PackingListRepository;
 @Service
 public class TestUtils {
 
-    public static final String LIST_DESCRIPTION = "List Description";
-    public static final String ITEM_DESCRIPTION = "Item Description";
-    public static final String CATEGORY_DESCRIPTION = "Category Description";
-
     @Autowired
     private PackingListRepository listRepository;
 

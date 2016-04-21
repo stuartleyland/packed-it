@@ -56,7 +56,7 @@ public class ListManagerTest {
 
     @Test
     public void listIsCreatedWithNullStartAndEndDates() {
-        final PackingList listToCreate = new PackingListBuilder().withDescription(TestUtils.LIST_DESCRIPTION).build();
+        final PackingList listToCreate = new PackingListBuilder().build();
         final PackingList list = listManager.createOrUpdateList(listToCreate);
         assertThat("List should have been created", list, editableListFieldsMatch(listToCreate));
     }
@@ -64,7 +64,6 @@ public class ListManagerTest {
     @Test
     public void listIsCreatedWithNullEndDate() {
         final PackingList listToCreate = new PackingListBuilder()
-                .withDescription(TestUtils.LIST_DESCRIPTION)
                 .withStartDate(NOW)
                 .build();
         final PackingList list = listManager.createOrUpdateList(listToCreate);
@@ -75,7 +74,6 @@ public class ListManagerTest {
     @Test
     public void listIsCreatedWithAllFieldsSpecified() {
         final PackingList listToCreate = new PackingListBuilder()
-                .withDescription(TestUtils.LIST_DESCRIPTION)
                 .withStartDate(NOW)
                 .withEndDate(TOMORROW)
                 .build();
@@ -86,7 +84,7 @@ public class ListManagerTest {
 
     @Test
     public void descriptionIsUpdated() {
-        final PackingList listToCreate = new PackingListBuilder().withDescription(TestUtils.LIST_DESCRIPTION).build();
+        final PackingList listToCreate = new PackingListBuilder().build();
         final PackingList list = listManager.createOrUpdateList(listToCreate);
         final String updatedDescription = "Updated description";
         list.setDescription(updatedDescription);
@@ -98,7 +96,6 @@ public class ListManagerTest {
     @Test
     public void startDateIsUpdated() {
         final PackingList listToCreate = new PackingListBuilder()
-                .withDescription(TestUtils.LIST_DESCRIPTION)
                 .withStartDate(NOW)
                 .build();
         final PackingList list = listManager.createOrUpdateList(listToCreate);
@@ -109,10 +106,8 @@ public class ListManagerTest {
     }
 
     @Test
-    public void descriptionFieldIsUpdated() {
+    public void endDateIsUpdated() {
         final PackingList listToCreate = new PackingListBuilder()
-                .withDescription(TestUtils.LIST_DESCRIPTION)
-                .withStartDate(NOW)
                 .withEndDate(TOMORROW)
                 .build();
         final PackingList list = listManager.createOrUpdateList(listToCreate);
