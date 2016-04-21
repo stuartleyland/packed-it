@@ -28,46 +28,6 @@ public class TestUtils {
     @Autowired
     private ItemRepository itemRepository;
 
-    public PackingList createMinimalListUnsaved() {
-        return createMinimalList(false);
-    }
-
-    public PackingList createMinimalListSaved() {
-        return createMinimalList(true);
-    }
-
-    private PackingList createMinimalList(final boolean save) {
-        PackingList list = new PackingList();
-        list.setDescription(LIST_DESCRIPTION);
-        if (save) {
-            list = listRepository.saveAndFlush(list);
-        }
-        return list;
-    }
-
-    public Item createMinimalItemUnsaved() {
-        return createMinimalItem(false);
-    }
-
-    public Item createMinimalItemSaved() {
-        return createMinimalItem(true);
-    }
-
-    private Item createMinimalItem(final boolean save) {
-        ItemCategory category = new ItemCategory();
-        category.setDescription(CATEGORY_DESCRIPTION);
-        category = categoryRepository.saveAndFlush(category);
-
-        Item item = new Item();
-        item.setDescription(ITEM_DESCRIPTION);
-        item.setCategory(category);
-
-        if (save) {
-            item = itemRepository.saveAndFlush(item);
-        }
-        return item;
-    }
-
     public ItemCategory saveCategory(final ItemCategory category) {
         return categoryRepository.save(category);
     }

@@ -31,7 +31,7 @@ public class ListManager {
         return listRepository.findByIdAndLoadFully(list.getId());
     }
 
-    public PackingList addItemsToList(final PackingList list, final Item... items) {
+    public PackingList addItemsToList(final PackingList list, final List<Item> items) {
         for (final Item item : items) {
             final ListItem listItem = new ListItem();
             listItem.setList(list);

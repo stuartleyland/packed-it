@@ -16,8 +16,11 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.packedit.Application;
 import com.packedit.model.Item;
+import com.packedit.model.ItemCategory;
 import com.packedit.repository.ItemRepository;
 import com.packedit.util.TestUtils;
+import com.packedit.util.builder.ItemBuilder;
+import com.packedit.util.builder.ItemCategoryBuilder;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(Application.class)
@@ -42,8 +45,7 @@ public class ItemRepositoryTest {
 
     @Test
     public void exceptionIsThrownIfCategoryIsNotSet() {
-        final Item item = new Item();
-        item.setDescription(TestUtils.ITEM_DESCRIPTION);
+        final Item item = new ItemBuilder(null).build();
 
         exception.expect(DataIntegrityViolationException.class);
         itemRepository.saveAndFlush(item);
@@ -51,7 +53,10 @@ public class ItemRepositoryTest {
 
     @Test
     public void newItemCanBeCreatedAndRetrieved() {
-        final Item item = testUtils.createMinimalItemUnsaved();
+        ItemCategory category = new ItemCategoryBuilder().build();
+        category = testUtils.saveCategory(category);
+
+        final Item item = new ItemBuilder(category).build();
         final Item savedItem = itemRepository.saveAndFlush(item);
 
         final Item retrievedItem = itemRepository.findOne(savedItem.getId());
@@ -60,7 +65,10 @@ public class ItemRepositoryTest {
 
     @Test
     public void itemIsNotEqualAfterUpdate() {
-        final Item item = testUtils.createMinimalItemUnsaved();
+        ItemCategory category = new ItemCategoryBuilder().build();
+        category = testUtils.saveCategory(category);
+
+        final Item item = new ItemBuilder(category).build();
         final Item savedItem = itemRepository.saveAndFlush(item);
 
         final Item retrievedItem = itemRepository.findOne(savedItem.getId());

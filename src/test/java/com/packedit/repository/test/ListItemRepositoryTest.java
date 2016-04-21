@@ -47,8 +47,13 @@ public class ListItemRepositoryTest {
 
     @Test
     public void exceptionIsThrownIfListIsNotSet() {
-        final ListItem listItem = new ListItem();
-        listItem.setItem(testUtils.createMinimalItemSaved());
+        ItemCategory category = new ItemCategoryBuilder().build();
+        category = testUtils.saveCategory(category);
+
+        Item item = new ItemBuilder(category).build();
+        item = testUtils.saveItem(item);
+
+        final ListItem listItem = new ListItemBuilder(null, item).build();
 
         exception.expect(DataIntegrityViolationException.class);
         listItemRepository.saveAndFlush(listItem);
@@ -56,8 +61,8 @@ public class ListItemRepositoryTest {
 
     @Test
     public void exceptionIsThrownIfItemIsNotSet() {
-        final ListItem listItem = new ListItem();
-        listItem.setList(testUtils.createMinimalListUnsaved());
+        final PackingList list = new PackingListBuilder().build();
+        final ListItem listItem = new ListItemBuilder(list, null).build();
 
         exception.expect(DataIntegrityViolationException.class);
         listItemRepository.saveAndFlush(listItem);

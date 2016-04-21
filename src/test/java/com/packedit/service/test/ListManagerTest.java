@@ -5,7 +5,6 @@ import static com.packedit.util.matcher.PackingListMatcher.editableListFieldsMat
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
 
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -140,16 +139,18 @@ public class ListManagerTest {
 
     @Test
     public void itemsAreAddedToList() {
-        final PackingList list = testUtils.createMinimalListSaved();
-        final Item item1 = testUtils.createMinimalItemSaved();
-        final Item item2 = testUtils.createMinimalItemSaved();
-        final Item item3 = testUtils.createMinimalItemSaved();
+        final PackingList list = new PackingListBuilder().build();
 
-        final PackingList updatedList = listManager.addItemsToList(list, item1, item2, item3);
+        ItemCategory category = new ItemCategoryBuilder().build();
+        category = testUtils.saveCategory(category);
+        List<Item> items = new ItemsBuilder().withXItemsInCategory(3, category).build();
+        items = testUtils.saveItems(items);
+
+        final PackingList updatedList = listManager.addItemsToList(list, items);
 
         final List<ListItem> listItems = listManager.getListItems(updatedList);
         assertThat("The list should have three items", listItems.size(), equalTo(3));
-        assertThat("List items should be linked to the items", listItems, listItemsAreLinkedToItems(Arrays.asList(item1, item2, item3)));
+        assertThat("List items should be linked to the items", listItems, listItemsAreLinkedToItems(items));
     }
 
     @Test
