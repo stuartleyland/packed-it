@@ -27,8 +27,16 @@ public class ListManager {
         return listRepository.save(list);
     }
 
+    public PackingList findById(final long id) {
+        return listRepository.findOne(id);
+    }
+
     public PackingList retrieveFullyLoadedList(final PackingList list) {
         return listRepository.findByIdAndLoadFully(list.getId());
+    }
+
+    public void deleteList(final PackingList list) {
+        listRepository.delete(list);
     }
 
     public PackingList addItemsToList(final PackingList list, final List<Item> items) {

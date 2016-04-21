@@ -3,6 +3,8 @@ package com.packedit.service.test;
 import static com.packedit.util.matcher.ListItemMatcher.listItemsAreLinkedToItems;
 import static com.packedit.util.matcher.PackingListMatcher.editableListFieldsMatch;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 
 import java.util.Calendar;
@@ -118,6 +120,21 @@ public class ListManagerTest {
     }
 
     @Test
+    public void listCanBeFoundByItsId() {
+        ItemCategory category = new ItemCategoryBuilder().build();
+        category = testUtils.saveCategory(category);
+
+        List<Item> items = new ItemsBuilder().withXItemsInCategory(2, category).build();
+        items = testUtils.saveItems(items);
+
+        PackingList createdList = new PackingListBuilder().withItems(items).build();
+        createdList = testUtils.saveList(createdList);
+
+        final PackingList retrievedList = listManager.findById(createdList.getId());
+        assertThat("Last should have been found", retrievedList, notNullValue());
+    }
+
+    @Test
     public void fullyLoadedListIsReturned() {
         ItemCategory category = new ItemCategoryBuilder().build();
         category = testUtils.saveCategory(category);
@@ -130,6 +147,25 @@ public class ListManagerTest {
 
         final PackingList retrievedList = listManager.retrieveFullyLoadedList(createdList);
         assertThat("The list items should be linked to the items", retrievedList.getItems(), listItemsAreLinkedToItems(items));
+    }
+
+    @Test
+    public void listIsDeleted() {
+        ItemCategory category = new ItemCategoryBuilder().build();
+        category = testUtils.saveCategory(category);
+
+        List<Item> items = new ItemsBuilder().withXItemsInCategory(2, category).build();
+        items = testUtils.saveItems(items);
+
+        PackingList createdList = new PackingListBuilder().withItems(items).build();
+        createdList = testUtils.saveList(createdList);
+
+        PackingList retrievedList = listManager.findById(createdList.getId());
+        assertThat("List should have been saved", retrievedList, notNullValue());
+
+        listManager.deleteList(createdList);
+        retrievedList = listManager.findById(createdList.getId());
+        assertThat("List should have been deleted", retrievedList, nullValue());
     }
 
     @Test
