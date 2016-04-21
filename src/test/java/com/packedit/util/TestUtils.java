@@ -7,11 +7,9 @@ import org.springframework.stereotype.Service;
 
 import com.packedit.model.Item;
 import com.packedit.model.ItemCategory;
-import com.packedit.model.ListItem;
 import com.packedit.model.PackingList;
 import com.packedit.repository.ItemCategoryRepository;
 import com.packedit.repository.ItemRepository;
-import com.packedit.repository.ListItemRepository;
 import com.packedit.repository.PackingListRepository;
 
 @Service
@@ -29,9 +27,6 @@ public class TestUtils {
 
     @Autowired
     private ItemRepository itemRepository;
-
-    @Autowired
-    private ListItemRepository listItemRepository;
 
     public PackingList createMinimalListUnsaved() {
         return createMinimalList(false);
@@ -71,22 +66,6 @@ public class TestUtils {
             item = itemRepository.saveAndFlush(item);
         }
         return item;
-    }
-
-    public ListItem createMinimalListItemUnsaved() {
-        return createMinimalListItem(false);
-    }
-
-    private ListItem createMinimalListItem(final boolean save) {
-        ListItem listItem = new ListItem();
-        listItem.setList(createMinimalListSaved());
-        listItem.setItem(createMinimalItemSaved());
-
-        if (save) {
-            listItem = listItemRepository.saveAndFlush(listItem);
-        }
-
-        return listItem;
     }
 
     public ItemCategory saveCategory(final ItemCategory category) {
