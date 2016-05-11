@@ -27,6 +27,10 @@ public class ListManager {
         return listRepository.save(list);
     }
 
+    public List<PackingList> findAll() {
+        return listRepository.findAll();
+    }
+
     public PackingList findById(final long id) {
         return listRepository.findOne(id);
     }

@@ -79,22 +79,17 @@
 	    return { lists: [] };
 	  },
 	  componentDidMount: function componentDidMount() {
-	    var listData = [{
-	      "id": 1,
-	      "description": "Valencia",
-	      "startDate": "2016-09-05",
-	      "endDate": "2016-09-10",
-	      "totalItems": 30,
-	      "itemsPacked": 25
-	    }, {
-	      "id": 2,
-	      "description": "Barcelona",
-	      "startDate": "2016-11-20",
-	      "endDate": "2016-11-25",
-	      "totalItems": 46,
-	      "itemsPacked": 0
-	    }];
-	    this.setState({ lists: listData });
+	    $.ajax({
+	      url: "/api/v1/lists",
+	      dataType: 'json',
+	      cache: false,
+	      success: function (data) {
+	        this.setState({ lists: data });
+	      }.bind(this),
+	      error: function (xhr, status, err) {
+	        console.error("/api/v1/lists", status, err.toString());
+	      }.bind(this)
+	    });
 	  },
 	  render: function render() {
 	    var listNodes = this.state.lists.map(function (list) {
