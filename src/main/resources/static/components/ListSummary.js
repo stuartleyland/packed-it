@@ -1,5 +1,6 @@
 import React from 'react';
 import moment from 'moment';
+import {Link} from 'react-router';
 
 export default class ListSummary extends React.Component {
 
@@ -19,7 +20,7 @@ export default class ListSummary extends React.Component {
     return (
         <div id="list">
           <div className="well well-sm">
-            <div className="description"><h2>{this.props.list.description}</h2></div>
+            <div className="description"><h2><Link to="/list-detail">{this.props.list.description}</Link></h2></div>
             <div className="dates">
               <h5>{startDateFormatted} - {endDateFormatted} ({numberOfNights} nights)</h5>
             </div>
