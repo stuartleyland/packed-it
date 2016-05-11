@@ -13,3 +13,6 @@ buildNumber.properties
 
 # Ignore the data folder which contains the H2 database
 data/
+
+**/node_modules/
+**/node/
