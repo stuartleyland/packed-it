@@ -1,5 +1,6 @@
 import React from 'react';
 import ListSummary from './ListSummary.js';
+import {Link} from 'react-router';
 
 export default class ListsOverview extends React.Component {
   constructor() {
@@ -24,7 +25,10 @@ export default class ListsOverview extends React.Component {
   render() {
     var listNodes = this.state.lists.map(list => <ListSummary list={list} key={list.id}/>);
     return (
-        <div id="lists">{listNodes}</div>
+    	<div id="overview">
+    		<div id="create-new-list"><h3><Link to="/list-edit">Create List</Link></h3></div>
+        	<div id="lists">{listNodes}</div>
+        </div>
       )
   }
 }

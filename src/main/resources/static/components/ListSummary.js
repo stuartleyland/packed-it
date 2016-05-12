@@ -20,7 +20,7 @@ export default class ListSummary extends React.Component {
     return (
         <div id="list">
           <div className="well well-sm">
-            <div className="description"><h2><Link to="/list-detail">{this.props.list.description}</Link></h2></div>
+            <div className="description"><h2><Link to={`/list-detail/${this.props.list.id}`}>{this.props.list.description}</Link></h2></div>
             <div className="dates">
               <h5>{startDateFormatted} - {endDateFormatted} ({numberOfNights} nights)</h5>
             </div>
