@@ -10,7 +10,7 @@ export default class ListsOverview extends React.Component {
 
   componentDidMount() {
     $.ajax({
-      url: "/api/v1/lists",
+      url: "http://localhost:8080/api/v1/lists",
       dataType: 'json',
       cache: false,
       success: (data) => {

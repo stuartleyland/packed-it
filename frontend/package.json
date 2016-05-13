@@ -7,6 +7,7 @@
     "test": "{src,test}/*.js"
   },
   "scripts": {
+    "webpack-devserver": "webpack-dev-server --debug --hot --devtool eval-source-map --output-pathinfo --watch --colors --inline --port 8050 --host 0.0.0.0",
     "watch": "webpack --watch -d"
   },
   "repository": {
