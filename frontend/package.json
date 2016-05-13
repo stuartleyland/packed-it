@@ -7,8 +7,9 @@
     "test": "{src,test}/*.js"
   },
   "scripts": {
-    "webpack-devserver": "webpack-dev-server --debug --hot --devtool eval-source-map --output-pathinfo --watch --colors --inline --port 8050 --host 0.0.0.0",
-    "watch": "webpack --watch -d"
+    "start": "NODE_PATH=$NODE_PATH:./shared node --harmony .",
+    "dev": "npm run start & webpack-dev-server --progress --color --port 8050",
+    "build": "NODE_ENV=production webpack --progress --color -p --config webpack.prod.config.js"
   },
   "repository": {
     "type": "git",
@@ -24,7 +25,9 @@
     "moment": "^2.13.0",
     "react": "^15.0.2",
     "react-dom": "^15.0.2",
-    "react-router": "^2.4.0"
+    "react-router": "^2.4.0",
+    "express": "^4.13.3",
+    "history": "^1.9.1"
   },
   "devDependencies": {
     "babel-core": "^6.8.0",

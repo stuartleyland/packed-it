@@ -2,18 +2,38 @@ var path = require('path');
 var webpack = require('webpack');
 
 module.exports = {
-  entry: './main.js',
-  output: { path: __dirname, filename: 'bundle.js' },
-  module: {
-    loaders: [
+  entry: [
+    'webpack-dev-server/client?http://127.0.0.1:8050/',
+    'webpack/hot/only-dev-server',
+    './client'
+  ],
+  output: {
+    path: __dirname,
+    filename: 'bundle.js'
+  },
+  resolve: {
+    modulesDirectories: ['node_modules', 'shared'],
+    extensions:         ['', '.js', '.jsx']
+  },
+  module: {
+    loaders: [
       {
-        test: /.jsx?$/,
-        loader: 'babel-loader',
+        test:    /\.jsx?$/,
         exclude: /node_modules/,
-        query: {
-          presets: ['es2015', 'react']
-        }
+        loaders: ['react-hot', 'babel']
       }
     ]
-  },
+  },
+  plugins: [
+    new webpack.HotModuleReplacementPlugin(),
+    new webpack.NoErrorsPlugin()
+  ],
+  devtool: 'inline-source-map',
+  devServer: {
+    hot: true,
+    proxy: {
+      '*': 'http://127.0.0.1:' + (process.env.PORT || 3000)
+    },
+    host: '127.0.0.1'
+  }
 };
