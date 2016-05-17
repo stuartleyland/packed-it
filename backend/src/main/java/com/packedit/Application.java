@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableJpaRepositories
 @EnableTransactionManagement
 @Configuration
-@ComponentScan("com.auth0")
+@ComponentScan({ "com.packedit", "com.auth0" })
 @ImportResource("classpath:auth0-security-context.xml")
 @PropertySource("classpath:auth0.properties")
 public class Application {
