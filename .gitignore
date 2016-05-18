@@ -21,6 +21,3 @@ data/
 **/bundle.js.map
 
 **.log*
-
-**/auth0-variables.js
-**/auth0.properties

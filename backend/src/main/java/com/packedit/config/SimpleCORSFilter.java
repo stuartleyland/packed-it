@@ -1,4 +1,4 @@
-package com.packedit.service.security;
+package com.packedit.config;
 
 import java.io.IOException;
 
