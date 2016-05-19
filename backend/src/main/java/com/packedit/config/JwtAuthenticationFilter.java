@@ -2,39 +2,52 @@ package com.packedit.config;
 
 import java.io.IOException;
 
+import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 
-public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
+public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
-    protected JwtAuthenticationFilter() {
-        super("/**");
-    }
+    @Autowired
+    private UserDetailsService userDetailsService;
+
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
+
+    @Value("${jwt.header}")
+    private String tokenHeader;
 
     @Override
-    protected boolean requiresAuthentication(final HttpServletRequest request, final HttpServletResponse response) {
-        return true;
-    }
+    public void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain chain) throws IOException, ServletException {
 
-    @Override
-    public Authentication attemptAuthentication(final HttpServletRequest request, final HttpServletResponse response)
-            throws AuthenticationException, IOException, ServletException {
-        final String header = request.getHeader("Authorization");
+        final HttpServletRequest httpRequest = (HttpServletRequest)request;
+        final String authToken = httpRequest.getHeader(this.tokenHeader);
+        if (StringUtils.isNotEmpty(authToken)) {
+            final String username = jwtTokenUtil.getUsernameFromToken(authToken);
 
-        if ((header == null) || !header.startsWith("Bearer ")) {
-            throw new JwtTokenMissingException("No JWT token found in request headers");
+            if ((username != null) && (SecurityContextHolder.getContext().getAuthentication() == null)) {
+                final UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
+                if (jwtTokenUtil.validateToken(authToken, userDetails)) {
+                    final UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null,
+                            userDetails.getAuthorities());
+                    authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpRequest));
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                }
+            }
         }
 
-        final String authToken = header.substring(7);
-
-        final JwtAuthenticationToken authRequest = new JwtAuthenticationToken(authToken);
-
-        return getAuthenticationManager().authenticate(authRequest);
+        chain.doFilter(request, response);
     }
-
 }
