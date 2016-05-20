@@ -1,6 +1,5 @@
 import React from 'react';
 import ListsOverview from './ListsOverview.js';
-import SecuredPing from './SecuredPing.js';
 import Login from './Login.js';
 
 export default class App extends React.Component {
@@ -12,7 +11,6 @@ export default class App extends React.Component {
   }
 
   setApiToken(token) {
-    console.log("Setting token to: " + token);
     this.setState({apiToken : token});
   }
 

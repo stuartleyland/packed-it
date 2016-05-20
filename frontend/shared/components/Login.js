@@ -21,8 +21,6 @@ export default class Login extends React.Component {
 
   handleLogin(event) {
     event.preventDefault();
-    console.log("Username = " + this.state.username);
-    console.log("Password = " + this.state.password);
 
     $.ajax({
       url: "http://localhost:8080/auth",
@@ -32,7 +30,6 @@ export default class Login extends React.Component {
       data: JSON.stringify(this.state),
       cache: false,
       success: (data) => {
-        console.log("Success! Response = " + data.token);
         this.props.onLoginSuccess(data.token);
       },
       error: (xhr, status, err) => {
