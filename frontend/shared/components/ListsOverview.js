@@ -11,6 +11,10 @@ export default class ListsOverview extends React.Component {
   componentDidMount() {
     $.ajax({
       url: "http://localhost:8080/api/v1/lists",
+      headers: {
+        'jwttoken' : this.props.apiToken
+      },
+      type: 'GET',
       dataType: 'json',
       cache: false,
       success: (data) => {

@@ -13,7 +13,6 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -24,7 +23,6 @@ import com.packedit.config.JwtAuthenticationResponse;
 import com.packedit.config.JwtTokenUtil;
 import com.packedit.config.JwtUser;
 
-@CrossOrigin(origins = "http://localhost:8050")
 @RestController
 public class LoginController {
 
