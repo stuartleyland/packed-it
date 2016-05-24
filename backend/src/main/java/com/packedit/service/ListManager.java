@@ -4,7 +4,10 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import com.packedit.model.Item;
@@ -16,6 +19,8 @@ import com.packedit.repository.PackingListRepository;
 @Service
 @Transactional
 public class ListManager {
+
+    private static final Logger LOG = LoggerFactory.getLogger(ListManager.class);
 
     @Autowired
     private PackingListRepository listRepository;
@@ -29,6 +34,13 @@ public class ListManager {
 
     public List<PackingList> findAll() {
         return listRepository.findAll();
+    }
+
+    public List<PackingList> findAllByUser(final UserDetails userDetails) {
+        LOG.debug("Retrieving lists for username [{}]", userDetails.getUsername());
+        final List<PackingList> lists = listRepository.findAllByUser(userDetails);
+        LOG.debug("Finished retrieving lists for username [{}]", userDetails.getUsername());
+        return lists;
     }
 
     public PackingList findById(final long id) {

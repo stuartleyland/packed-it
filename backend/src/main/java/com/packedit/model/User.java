@@ -3,6 +3,7 @@ package com.packedit.model;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -12,12 +13,15 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "USER")
@@ -62,6 +66,10 @@ public class User {
     @JoinTable(name = "USER_AUTHORITY", joinColumns = { @JoinColumn(name = "USER_ID", referencedColumnName = "ID") }, inverseJoinColumns = {
             @JoinColumn(name = "AUTHORITY_ID", referencedColumnName = "ID") })
     private List<Authority> authorities;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private List<PackingList> lists;
 
     public Long getId() {
         return id;
@@ -125,5 +133,13 @@ public class User {
 
     public void setLastPasswordResetDate(final Date lastPasswordResetDate) {
         this.lastPasswordResetDate = lastPasswordResetDate;
+    }
+
+    public List<PackingList> getLists() {
+        return lists;
+    }
+
+    public void setLists(final List<PackingList> lists) {
+        this.lists = lists;
     }
 }

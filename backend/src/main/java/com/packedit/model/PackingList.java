@@ -6,12 +6,20 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 public class PackingList extends BaseEntity {
+
+    @NotNull
+    @ManyToOne
+    @JsonBackReference
+    private User user;
 
     @NotNull(message = "Description is required")
     @Size(max = 200, message = "Description cannot be more than 200 characters")
@@ -25,6 +33,14 @@ public class PackingList extends BaseEntity {
 
     public void addListItem(final ListItem listItem) {
         items.add(listItem);
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(final User user) {
+        this.user = user;
     }
 
     public String getDescription() {

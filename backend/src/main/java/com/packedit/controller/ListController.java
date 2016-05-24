@@ -3,6 +3,8 @@ package com.packedit.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -20,7 +22,8 @@ public class ListController {
 
     @RequestMapping(value = "lists", method = RequestMethod.GET)
     public List<PackingList> list() {
-        return listManager.findAll();
+        final UserDetails userDetails = (UserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return listManager.findAllByUser(userDetails);
     }
 
     @RequestMapping(value = "lists", method = RequestMethod.POST)
