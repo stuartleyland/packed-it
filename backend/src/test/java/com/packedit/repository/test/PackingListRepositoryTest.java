@@ -13,6 +13,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 
 import org.apache.commons.lang3.StringUtils;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.packedit.Application;
 import com.packedit.model.PackingList;
+import com.packedit.model.User;
 import com.packedit.repository.PackingListRepository;
+import com.packedit.util.TestUtils;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(Application.class)
@@ -32,9 +35,20 @@ public class PackingListRepositoryTest {
     @Autowired
     private PackingListRepository packingListRepository;
 
+    @Autowired
+    private TestUtils testUtils;
+
+    private User testUser;
+
+    @Before
+    public void createTestUser() {
+        testUser = testUtils.getOrCreateTestUser();
+    }
+
     @Test
     public void exceptionIsThrownIfDescriptionIsNotSet() {
         final PackingList list = new PackingList();
+        list.setUser(testUser);
 
         try {
             packingListRepository.saveAndFlush(list);
@@ -54,6 +68,7 @@ public class PackingListRepositoryTest {
     @Test
     public void exceptionIsThrownIfDescriptionIsTooLong() {
         final PackingList list = new PackingList();
+        list.setUser(testUser);
         list.setDescription(StringUtils.repeat("a", 201));
         try {
             packingListRepository.saveAndFlush(list);
@@ -73,6 +88,7 @@ public class PackingListRepositoryTest {
     @Test
     public void newListCanBeCreatedAndRetrieved() {
         final PackingList list = new PackingList();
+        list.setUser(testUser);
         list.setDescription(LIST_DESCRIPTION);
 
         final PackingList savedList = packingListRepository.saveAndFlush(list);
@@ -84,6 +100,7 @@ public class PackingListRepositoryTest {
     @Test
     public void listIsNotEqualAfterUpdate() {
         final PackingList list = new PackingList();
+        list.setUser(testUser);
         list.setDescription(LIST_DESCRIPTION);
 
         final PackingList savedList = packingListRepository.saveAndFlush(list);

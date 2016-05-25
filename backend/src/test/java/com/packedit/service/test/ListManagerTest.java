@@ -11,6 +11,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,7 @@ import com.packedit.model.Item;
 import com.packedit.model.ItemCategory;
 import com.packedit.model.ListItem;
 import com.packedit.model.PackingList;
+import com.packedit.model.User;
 import com.packedit.service.ListManager;
 import com.packedit.util.TestUtils;
 import com.packedit.util.builder.ItemCategoryBuilder;
@@ -56,16 +58,23 @@ public class ListManagerTest {
     @Autowired
     private ListManager listManager;
 
+    private User testUser;
+
+    @Before
+    public void createTestUser() {
+        testUser = testUtils.getOrCreateTestUser();
+    }
+
     @Test
     public void listIsCreatedWithNullStartAndEndDates() {
-        final PackingList listToCreate = new PackingListBuilder().build();
+        final PackingList listToCreate = new PackingListBuilder(testUser).build();
         final PackingList list = listManager.createOrUpdateList(listToCreate);
         assertThat("List should have been created", list, editableListFieldsMatch(listToCreate));
     }
 
     @Test
     public void listIsCreatedWithNullEndDate() {
-        final PackingList listToCreate = new PackingListBuilder()
+        final PackingList listToCreate = new PackingListBuilder(testUser)
                 .withStartDate(NOW)
                 .build();
         final PackingList list = listManager.createOrUpdateList(listToCreate);
@@ -75,7 +84,7 @@ public class ListManagerTest {
 
     @Test
     public void listIsCreatedWithAllFieldsSpecified() {
-        final PackingList listToCreate = new PackingListBuilder()
+        final PackingList listToCreate = new PackingListBuilder(testUser)
                 .withStartDate(NOW)
                 .withEndDate(TOMORROW)
                 .build();
@@ -86,7 +95,7 @@ public class ListManagerTest {
 
     @Test
     public void descriptionIsUpdated() {
-        final PackingList listToCreate = new PackingListBuilder().build();
+        final PackingList listToCreate = new PackingListBuilder(testUser).build();
         final PackingList list = listManager.createOrUpdateList(listToCreate);
         final String updatedDescription = "Updated description";
         list.setDescription(updatedDescription);
@@ -97,7 +106,7 @@ public class ListManagerTest {
 
     @Test
     public void startDateIsUpdated() {
-        final PackingList listToCreate = new PackingListBuilder()
+        final PackingList listToCreate = new PackingListBuilder(testUser)
                 .withStartDate(NOW)
                 .build();
         final PackingList list = listManager.createOrUpdateList(listToCreate);
@@ -109,7 +118,7 @@ public class ListManagerTest {
 
     @Test
     public void endDateIsUpdated() {
-        final PackingList listToCreate = new PackingListBuilder()
+        final PackingList listToCreate = new PackingListBuilder(testUser)
                 .withEndDate(TOMORROW)
                 .build();
         final PackingList list = listManager.createOrUpdateList(listToCreate);
@@ -127,7 +136,7 @@ public class ListManagerTest {
         List<Item> items = new ItemsBuilder().withXItemsInCategory(2, category).build();
         items = testUtils.saveItems(items);
 
-        PackingList createdList = new PackingListBuilder().withItems(items).build();
+        PackingList createdList = new PackingListBuilder(testUser).withItems(items).build();
         createdList = testUtils.saveList(createdList);
 
         final PackingList retrievedList = listManager.findById(createdList.getId());
@@ -142,7 +151,7 @@ public class ListManagerTest {
         List<Item> items = new ItemsBuilder().withXItemsInCategory(2, category).build();
         items = testUtils.saveItems(items);
 
-        PackingList createdList = new PackingListBuilder().withItems(items).build();
+        PackingList createdList = new PackingListBuilder(testUser).withItems(items).build();
         createdList = testUtils.saveList(createdList);
 
         final PackingList retrievedList = listManager.retrieveFullyLoadedList(createdList);
@@ -157,7 +166,7 @@ public class ListManagerTest {
         List<Item> items = new ItemsBuilder().withXItemsInCategory(2, category).build();
         items = testUtils.saveItems(items);
 
-        PackingList createdList = new PackingListBuilder().withItems(items).build();
+        PackingList createdList = new PackingListBuilder(testUser).withItems(items).build();
         createdList = testUtils.saveList(createdList);
 
         PackingList retrievedList = listManager.findById(createdList.getId());
@@ -170,7 +179,7 @@ public class ListManagerTest {
 
     @Test
     public void itemsAreAddedToList() {
-        final PackingList list = new PackingListBuilder().build();
+        final PackingList list = new PackingListBuilder(testUser).build();
 
         ItemCategory category = new ItemCategoryBuilder().build();
         category = testUtils.saveCategory(category);
@@ -192,7 +201,7 @@ public class ListManagerTest {
         List<Item> items = new ItemsBuilder().withXItemsInCategory(2, category).build();
         items = testUtils.saveItems(items);
 
-        PackingList createdList = new PackingListBuilder().withItems(items).build();
+        PackingList createdList = new PackingListBuilder(testUser).withItems(items).build();
         createdList = testUtils.saveList(createdList);
 
         final List<ListItem> listItems = listManager.getListItems(createdList);

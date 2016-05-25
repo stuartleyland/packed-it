@@ -6,15 +6,21 @@ import java.util.List;
 import com.packedit.model.Item;
 import com.packedit.model.ListItem;
 import com.packedit.model.PackingList;
+import com.packedit.model.User;
 
 public class PackingListBuilder {
 
     private final PackingList list = new PackingList();
 
+    private final User user;
     private String description = "A Packing List";
     private Date startDate = null;
     private Date endDate = null;
     private List<ListItem> items = new ListItemsBuilder(list).build();
+
+    public PackingListBuilder(final User user) {
+        this.user = user;
+    }
 
     public PackingListBuilder withDescription(final String description) {
         this.description = description;
@@ -37,6 +43,7 @@ public class PackingListBuilder {
     }
 
     public PackingList build() {
+        list.setUser(user);
         list.setDescription(description);
         list.setStartDate(startDate);
         list.setEndDate(endDate);

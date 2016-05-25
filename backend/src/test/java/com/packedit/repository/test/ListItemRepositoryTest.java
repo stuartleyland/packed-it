@@ -6,6 +6,7 @@ import static org.junit.Assert.assertThat;
 
 import java.util.List;
 
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -20,6 +21,7 @@ import com.packedit.model.Item;
 import com.packedit.model.ItemCategory;
 import com.packedit.model.ListItem;
 import com.packedit.model.PackingList;
+import com.packedit.model.User;
 import com.packedit.repository.ListItemRepository;
 import com.packedit.service.ListManager;
 import com.packedit.util.TestUtils;
@@ -45,6 +47,13 @@ public class ListItemRepositoryTest {
     @Rule
     public ExpectedException exception = ExpectedException.none();
 
+    private User testUser;
+
+    @Before
+    public void createTestUser() {
+        testUser = testUtils.getOrCreateTestUser();
+    }
+
     @Test
     public void exceptionIsThrownIfListIsNotSet() {
         ItemCategory category = new ItemCategoryBuilder().build();
@@ -61,7 +70,7 @@ public class ListItemRepositoryTest {
 
     @Test
     public void exceptionIsThrownIfItemIsNotSet() {
-        final PackingList list = new PackingListBuilder().build();
+        final PackingList list = new PackingListBuilder(testUser).build();
         final ListItem listItem = new ListItemBuilder(list, null).build();
 
         exception.expect(DataIntegrityViolationException.class);
@@ -70,7 +79,7 @@ public class ListItemRepositoryTest {
 
     @Test
     public void listItemCanBeCreatedAndRetrieved() {
-        PackingList list = new PackingListBuilder().build();
+        PackingList list = new PackingListBuilder(testUser).build();
         list = testUtils.saveList(list);
 
         ItemCategory category = new ItemCategoryBuilder().build();
@@ -94,7 +103,7 @@ public class ListItemRepositoryTest {
         List<Item> items = new ItemsBuilder().withXItemsInCategory(2, category).build();
         items = testUtils.saveItems(items);
 
-        PackingList createdList = new PackingListBuilder().withItems(items).build();
+        PackingList createdList = new PackingListBuilder(testUser).withItems(items).build();
         createdList = listManager.createOrUpdateList(createdList);
 
         final List<ListItem> listItems = listItemRepository.findByList(createdList);
