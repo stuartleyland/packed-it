@@ -96,6 +96,7 @@
 				<configuration>
 					<imageName>${docker.image.prefix}/packedit-api</imageName>
 					<dockerDirectory>docker</dockerDirectory>
+					<useConfigFile>true</useConfigFile>
 					<resources>
 						<resource>
 							<targetPath>/</targetPath>
