@@ -1,4 +1,6 @@
 language: java
+before_install:
+  docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
 script: mvn clean package jacoco:report coveralls:report docker:build
 jdk:
   - oraclejdk8
