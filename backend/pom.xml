@@ -66,6 +66,7 @@
 	</properties>
 
 	<build>
+		<finalName>packed-it</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
