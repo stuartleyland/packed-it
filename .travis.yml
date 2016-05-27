@@ -1,5 +1,4 @@
 language: java
-before_install: cd backend
 script: mvn clean package jacoco:report coveralls:report docker:build
 jdk:
   - oraclejdk8
